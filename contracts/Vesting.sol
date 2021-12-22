@@ -29,6 +29,7 @@ contract Vest is Ownable, ERC20 {
     }
 
     // Start vesting tokens over six months
+    // Can be called to start vesting period even if no tokens are assigned to any address
     function startVesting() external onlyOwner {
         require(startTime == 0, "Vesting cannot be started more than once");
         startTime = block.timestamp;
