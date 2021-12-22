@@ -13,3 +13,5 @@ To run tests clone the repo and execute the following command:-
 ```bash
 truffle test
 ```
+
+(The tests take 2-3 minutes to complete)
