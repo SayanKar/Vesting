@@ -18,11 +18,17 @@ contract Grant is Ownable, ERC20 {
     constructor() ERC20("Raj", "YOY") {}
 
     function addTokensForAddresses(address[] calldata _users, uint256[] calldata _tokens) external onlyOwner {
-
+        require(_users.length == _tokens.length, "UserList and TokenList length not same");
+        require(_users.length <= 1000, "UserList limit exceeded");
+        require(startTime == 0, "Cannot update tokensPerAddess after Vesting period has started");
+        for(uint index = 0; index < _users.length; index++) {
+            tokensPerAddress[_users[index]].tokens += _tokens[index] * (10**decimals());
+        }
     }
 
     function startGrant() external onlyOwner {
-
+        require(startTime == 0, "Vesting cannot be started more than once");
+        startTime = block.timestamp;
     }
 
     function claimFunds() external {
