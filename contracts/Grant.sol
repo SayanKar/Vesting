@@ -32,6 +32,24 @@ contract Grant is Ownable, ERC20 {
     }
 
     function claimFunds() external {
+        require(startTime != 0, "Granting period not started");
+        require(tokensPerAddress[msg.sender].tokens > 0, "Zero tokens assigned");
+        require(tokensPerAddress[msg.sender].lastClaimed <= startTime + grantingPeriod, "You have fully claimed your funds");
+        
+        uint claimAmount;
+        
+        if(tokensPerAddress[msg.sender].lastClaimed == 0)
+            tokensPerAddress[msg.sender].lastClaimed = startTime;
 
+        if( block.timestamp >= startTime + grantingPeriod){
+            uint previousClaimedAmount = ((tokensPerAddress[msg.sender].lastClaimed - startTime) * tokensPerAddress[msg.sender].tokens) / grantingPeriod;
+            claimAmount = tokensPerAddress[msg.sender].tokens - previousClaimedAmount;
+        } else {
+            uint rewardTime = block.timestamp - tokensPerAddress[msg.sender].lastClaimed;
+            claimAmount = (rewardTime * tokensPerAddress[msg.sender].tokens) / grantingPeriod; 
+        }
+
+        tokensPerAddress[msg.sender].lastClaimed = block.timestamp;
+        _mint(msg.sender, claimAmount);
     }
 }
