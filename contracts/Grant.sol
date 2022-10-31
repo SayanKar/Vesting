@@ -10,12 +10,16 @@ contract Grant is Ownable, ERC20 {
         uint256 tokens;
         uint256 lastClaimed;
     }
-
+    
+    uint256 rewardPercentage;
+    
     mapping(address => addressDetail) public tokensPerAddress;
     uint256 public startTime;
     uint256 constant public grantingPeriod = 2 minutes;
 
-    constructor() ERC20("Raj", "YOY") {}
+    constructor() ERC20("Raj", "YOY") {
+        rewardPercentage = 100;
+    }
 
     function addTokensForAddresses(address[] calldata _users, uint256[] calldata _tokens) external onlyOwner {
         require(_users.length == _tokens.length, "UserList and TokenList length not same");
