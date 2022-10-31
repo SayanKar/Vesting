@@ -9,6 +9,7 @@ contract Grant is Ownable, ERC20 {
     struct addressDetail {
         uint256 tokens;
         uint256 lastClaimed;
+        uint256 totalClaimed;
     }
 
     mapping(address => addressDetail) public tokensPerAddress;
@@ -48,7 +49,8 @@ contract Grant is Ownable, ERC20 {
             uint rewardTime = block.timestamp - tokensPerAddress[msg.sender].lastClaimed;
             claimAmount = (rewardTime * tokensPerAddress[msg.sender].tokens) / grantingPeriod; 
         }
-
+        
+        tokensPerAddress[msg.sender].totalClaimed += claimAmount;
         tokensPerAddress[msg.sender].lastClaimed = block.timestamp;
         _mint(msg.sender, claimAmount);
     }
