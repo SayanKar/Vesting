@@ -52,4 +52,8 @@ contract Grant is Ownable, ERC20 {
         tokensPerAddress[msg.sender].lastClaimed = block.timestamp;
         _mint(msg.sender, claimAmount);
     }
+    
+    function lastClaimed() external view returns(uint256){
+        return tokensPerAddress[msg.sender].lastClaimed;
+    }
 }
